@@ -15,7 +15,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 class GPT3:
     """Class for interacting with the OpenAI API."""
     def __init__(self):
-        self.model_name = 'gpt-3.5-turbo'
+        self.model_name = 'gpt-3.5-turbo-instruct'
         self.client = openai.OpenAI(
             api_key="OPENAI_API_KEY",
         )
