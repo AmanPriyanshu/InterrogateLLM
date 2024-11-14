@@ -34,12 +34,15 @@ class GPT3:
                                                     n=n
                                                     )
                 break
-
+            # except openai.RateLimitError as e:
+            #     time.sleep(30)
+            # except openai.InternalServerError as e:
+            #     time.sleep(30)
             except Exception as anything:
                 if anything.args[0] == 'string indices must be integers' or 'The response was filtered' in anything.args[0]:
                     return {'choices': [{'text': ''}]}
 
-                time.sleep(1)
+                time.sleep(30)
                 error_counter += 1
                 if error_counter > 10:
                     raise anything
@@ -73,15 +76,22 @@ class LLamaV2:
 
     def submit_request(self, prompt, temperature=0.6, max_length=300, top_p=0.9, split_by='Question:'):
         do_sample = True
-        response = self.client.chat.completions.create(
-            model=self.model_name,
-            messages=[
-                {"role": "user", "content": prompt},
-            ],
-            temperature=temperature,
-            max_tokens=max_length,
-            top_p=0.9,
-        )
+        while True:
+            try:
+                response = self.client.chat.completions.create(
+                    model=self.model_name,
+                    messages=[
+                        {"role": "user", "content": prompt},
+                    ],
+                    temperature=temperature,
+                    max_tokens=max_length,
+                    top_p=top_p,
+                )
+                # If successful, exit the loop
+                break
+            except Exception as e: 
+                print(f"Request failed with error: {e}. Retrying in 30 seconds...")
+                time.sleep(30)
         decoded = response.choices[0].message.content
         response = decoded.strip().split(prompt)
         response = [res.strip() for res in response if res != ''][0]
