@@ -43,7 +43,7 @@ class GPT3:
 
                 time.sleep(30)
                 error_counter += 1
-                if error_counter > 10:
+                if error_counter > 1:
                     raise anything
         response = [res.text.strip() for res in response.choices]
         return response
