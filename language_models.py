@@ -41,7 +41,7 @@ class GPT3:
                 if anything.args[0] == 'string indices must be integers' or 'The response was filtered' in anything.args[0]:
                     return {'choices': [{'text': ''}]}
 
-                time.sleep(30)
+                time.sleep(3)
                 error_counter += 1
                 if error_counter > 1:
                     raise anything
